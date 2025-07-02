@@ -1,18 +1,16 @@
 import ballerina/time;
-import ballerinax/mysql.driver as _; // This bundles the driver to the project so that you don't need to bundle it via the `Ballerina.toml` file.
-import ballerinax/mysql;
+import ballerinax/postgresql;
 import ballerina/sql;
 
-public type Employee record {
-    int employee_id?;
-    string first_name;
-    string last_name;
-    string email;
-    string phone;
-    time:Date hire_date;
-    int? manager_id;
-    string job_title;
-};
+public type anstalld record {
+    int id?;
+    string firstNamn;
+    string lastName;
+    string workTitle;
+    time:Civil created;
+    time:Civil updated;
+    string comment;
+    };
 
 configurable string USER = ?;
 configurable string PASSWORD = ?;
@@ -20,30 +18,38 @@ configurable string HOST = ?;
 configurable int PORT = ?;
 configurable string DATABASE = ?;
 
-final mysql:Client dbClient = check new(
-    host=HOST, user=USER, password=PASSWORD, port=PORT, database=DATABASE
+
+final postgresql:Client dbClient = check new postgresql:Client(
+    host = HOST, 
+    username = USER, 
+    password = PASSWORD, 
+    port = PORT, 
+    database = DATABASE,
+    options = {
+        ssl: {
+            mode: postgresql:REQUIRE
+        }
+    }
 );
 
-isolated function addEmployee(Employee emp) returns int|error {
+isolated function addAnstalld(anstalld anst) returns int|error {
     sql:ExecutionResult result = check dbClient->execute(`
-        INSERT INTO Employees (
-            employee_id, 
-            first_name, 
-            last_name, 
-            email, 
-            phone,
-            hire_date, 
-            manager_id, 
-            job_title)
+        INSERT INTO anstalld (
+            id, 
+            firstNamn, 
+            lastName, 
+            workTitle,
+            created,
+            updated,
+            comment)
         VALUES (
-            ${emp.employee_id}, 
-            ${emp.first_name}, 
-            ${emp.last_name},
-            ${emp.email}, 
-            ${emp.phone}, 
-            ${emp.hire_date}, 
-            ${emp.manager_id},
-            ${emp.job_title})
+            ${anst.id}, 
+            ${anst.firstNamn}, 
+            ${anst.lastName},
+            ${anst.workTitle}, 
+            ${anst.created}, 
+            ${anst.updated}, 
+            ${anst.comment}
     `);
 
     int|string? lastInsertId = result.lastInsertId;
@@ -54,50 +60,49 @@ isolated function addEmployee(Employee emp) returns int|error {
     }
 }
 
-isolated function getEmployee(int id) returns Employee|error {
-    Employee employee = check dbClient->queryRow(
-        `SELECT * FROM Employees WHERE employee_id = ${id}`
+isolated function getAnstalld(int id) returns anstalld|error {
+    anstalld anst = check dbClient->queryRow(
+        `SELECT * FROM anstalld WHERE id = ${id}`
     );
-    return employee;
+    return anst;
 }
 
-isolated function getAllEmployees() returns Employee[]|error {
-    Employee[] employees = [];
-    stream<Employee, error?> resultStream = dbClient->query(
-        `SELECT * FROM Employees`
+isolated function getAllAnstalld() returns anstalld[]|error {
+    anstalld[] anstalldList = [];
+    stream<anstalld, error?> resultStream = dbClient->query(
+        `SELECT * FROM anstalld`
     );
-    check from Employee employee in resultStream
+    check from anstalld anst in resultStream
     do {
-        employees.push(employee);
+        anstalldList.push(anst);
     };
     check resultStream.close();
-    return employees;
+    return anstalldList;
 }
 
-isolated function updateEmployee(Employee emp) returns int|error {
+isolated function updateAnstalld(anstalld anst) returns int|error {
     sql:ExecutionResult result = check dbClient->execute(`
-        UPDATE Employees SET
-            first_name = ${emp.first_name},
-            last_name = ${emp.last_name},
-            email = ${emp.email},
-            phone = ${emp.phone},
-            hire_date = ${emp.hire_date},
-            manager_id = ${emp.manager_id},
-            job_title = ${emp.job_title}
-            WHERE employee_id = ${emp.employee_id}
+        UPDATE anstalld SET
+            firstNamn = ${anst.firstNamn},
+            lastName = ${anst.lastName},
+            workTitle = ${anst.workTitle},
+            created = ${anst.created},
+            updated = ${anst.updated},
+            comment = ${anst.comment}
+            WHERE id = ${anst.id}
     `);
 
-    int|string? lastInsertId = result.lastInsertId;
-    if lastInsertId is int {
-        return lastInsertId;
+    int? affectedRowCount = result.affectedRowCount;
+    if affectedRowCount is int {
+        return affectedRowCount;
     } else {
-        return error("Unable to obtain last insert ID");
+        return error("Unable to obtain the affected row count");
     }
 }
 
-isolated function removeEmployee(int id) returns int|error {
+isolated function removeAnstalld(int id) returns int|error {
     sql:ExecutionResult result = check dbClient->execute(`
-        DELETE FROM Employees WHERE employee_id = ${id}
+        DELETE FROM anstalld WHERE id = ${id}
     `);
     
     int? affectedRowCount = result.affectedRowCount;
@@ -107,4 +112,3 @@ isolated function removeEmployee(int id) returns int|error {
     return error("Unable to obtain the affected row count");
     }
 }
-

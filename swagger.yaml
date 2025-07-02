@@ -1,10 +1,11 @@
 openapi: 3.0.0
 info:
-  title: Employee API
+  title: anstalld_service API
   version: 1.0.0
   description: API för att hantera anställda
 servers:
-  - url: /employees
+  - url: /anstalld
+
 paths:
   /:
     get:
@@ -17,7 +18,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Employee'
+                  $ref: '#/components/schemas/anstalld'
     post:
       summary: Lägg till en ny anställd
       requestBody:
@@ -25,7 +26,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Employee'
+              $ref: '#/components/schemas/anstalld'
       responses:
         '200':
           description: ID på ny anställd
@@ -48,7 +49,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Employee'
+                $ref: '#/components/schemas/anstalld'
     delete:
       summary: Ta bort en anställd
       parameters:
@@ -66,10 +67,10 @@ paths:
                 type: integer
 components:
   schemas:
-    Employee:
+    anstalld:
       type: object
       properties:
-        employee_id:
+        anstalld_id:
           type: integer
         first_name:
           type: string
