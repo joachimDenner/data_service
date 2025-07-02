@@ -2,7 +2,7 @@ schemaVersion: '1.2'
 endpoints:
   - name: data_service
     service:
-      port: 8080
+      port: 9090
       basePath: /
     type: REST
     displayName: data_service
