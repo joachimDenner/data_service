@@ -16,3 +16,4 @@ version = "1.16.1"
 org = "ballerinax"
 name = "postgresql.driver"
 version = "1.6.1"
+
