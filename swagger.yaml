@@ -86,3 +86,4 @@ components:
           type: integer
         job_title:
           type: string
+          
