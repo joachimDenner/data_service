@@ -1,5 +1,11 @@
 import ballerina/http;
+import ballerina/openapi;
 
+@openapi:ServiceInfo { 
+    title: "Employee API", 
+    version: "1.0.0", 
+    description: "API för att hantera anställda" 
+}
 service /employees on new http:Listener(9090) {
     isolated resource function post .(@http:Payload Employee emp) returns int|error? {
         return addEmployee(emp);

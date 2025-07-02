@@ -1,11 +1,88 @@
 openapi: 3.0.0
 info:
-  title: My API
+  title: Employee API
   version: 1.0.0
+  description: API för att hantera anställda
+servers:
+  - url: /employees
 paths:
-  /example:
+  /:
     get:
-      summary: Retrieve an example resource
+      summary: Hämta alla anställda
       responses:
         '200':
-          description: Successful response
+          description: Lista av anställda
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+    post:
+      summary: Lägg till en ny anställd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '200':
+          description: ID på ny anställd
+          content:
+            application/json:
+              schema:
+                type: integer
+  /{id}:
+    get:
+      summary: Hämta en anställd via ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: En anställd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    delete:
+      summary: Ta bort en anställd
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Antal rader borttagna
+          content:
+            application/json:
+              schema:
+                type: integer
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        employee_id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        hire_date:
+          type: string
+          format: date
+        manager_id:
+          type: integer
+        job_title:
+          type: string

@@ -248,6 +248,14 @@ dependencies = [
 
 [[package]]
 org = "ballerina"
+name = "openapi"
+version = "2.3.2"
+modules = [
+	{org = "ballerina", packageName = "openapi", moduleName = "openapi"}
+]
+
+[[package]]
+org = "ballerina"
 name = "os"
 version = "1.10.0"
 dependencies = [
@@ -360,6 +368,7 @@ name = "data_service"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "openapi"},
 	{org = "ballerina", name = "sql"},
 	{org = "ballerina", name = "time"},
 	{org = "ballerinai", name = "observe"},
