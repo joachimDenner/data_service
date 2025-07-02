@@ -1,11 +1,11 @@
 schemaVersion: '1.2'
 endpoints:
-  - name: data_service
+  - name: data_service-1
     service:
       port: 9090
       basePath: /
     type: REST
-    displayName: data_service
+    displayName: data_service 1
     networkVisibilities:
       - Public
       - Project
